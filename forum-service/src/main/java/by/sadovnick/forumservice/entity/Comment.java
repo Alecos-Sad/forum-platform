@@ -9,7 +9,6 @@ import jakarta.persistence.ForeignKey;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
@@ -19,8 +18,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.TimeZoneStorage;
 import org.hibernate.annotations.TimeZoneStorageType;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 
 /**
  * Представляет комментарий в обсуждении публикации.
@@ -43,6 +45,7 @@ import org.hibernate.annotations.TimeZoneStorageType;
 public class Comment {
 
     @Id
+    @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
@@ -63,18 +66,19 @@ public class Comment {
             foreignKey = @ForeignKey(name = "fk_comments_parent_comment"))
     private Comment parentComment;
 
-    @Lob
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private CommentStatus status;
 
+    @CreationTimestamp
     @TimeZoneStorage(TimeZoneStorageType.NORMALIZE_UTC)
     @Column(name = "created_at", nullable = false, updatable = false)
     private ZonedDateTime createdAt;
 
+    @UpdateTimestamp
     @TimeZoneStorage(TimeZoneStorageType.NORMALIZE_UTC)
     @Column(name = "updated_at", nullable = false)
     private ZonedDateTime updatedAt;

@@ -16,8 +16,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.TimeZoneStorage;
 import org.hibernate.annotations.TimeZoneStorageType;
+import org.hibernate.annotations.UuidGenerator;
 
 /**
  * Хранит метаданные файла, прикрепленного к публикации.
@@ -37,6 +39,7 @@ import org.hibernate.annotations.TimeZoneStorageType;
 public class Attachment {
 
     @Id
+    @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
@@ -59,6 +62,7 @@ public class Attachment {
     @Column(name = "size_bytes", nullable = false)
     private long sizeBytes;
 
+    @CreationTimestamp
     @TimeZoneStorage(TimeZoneStorageType.NORMALIZE_UTC)
     @Column(name = "created_at", nullable = false, updatable = false)
     private ZonedDateTime createdAt;
